@@ -1,24 +1,34 @@
-export default function orderByProps(obj, arr) {
-  const newArray = [];
-  const newArray2 = [];
-  if (arr.length === 0) {
-    for (const key in obj) {
-      newArray2.push({ key, value: obj[key] });
-    }
-    newArray2.sort((a, b) => (a.key > b.key ? 1 : -1));
-  } else {
-    for (const i in arr) {
-      const value = arr[i];
-      if (Object.keys(obj).includes(arr[i])) {
-        newArray.push({ key: value, value: obj[value] });
-      }
-    }
-    for (const key in obj) {
-      if (!arr.includes(key)) {
-        newArray2.push({ key, value: obj[key] });
-      }
-      newArray2.sort((a, b) => (a.key > b.key ? 1 : -1));
+const obj = {
+  name: 'мечник', health: 10, level: 2, attack: 80, defence: 40,
+};
+
+export default function orderByProps(object, array) {
+  const result = [];
+  for (const prop in object) {
+    if (Object.prototype.hasOwnProperty.call(object, prop) && !array.includes(prop)) {
+      result.push({ key: prop, value: object[prop] });
     }
   }
-  return [...newArray, ...newArray2];
+
+  result.sort((a, b) => {
+    if (a.key > b.key) {
+      return 1;
+    }
+    return -1;
+  });
+
+  for (let i = array.length - 1; i >= 0; i -= 1) {
+    if (Object.prototype.hasOwnProperty.call(object, array[i])) {
+      result.unshift({
+        key: array[i],
+        value: object[array[i]],
+      });
+    }
+  }
+  return result;
 }
+
+console.log(orderByProps(obj, ['name', 'level']));
+console.log(obj);
+console.log(orderByProps(obj, ['health', 'level']));
+console.log(obj);
