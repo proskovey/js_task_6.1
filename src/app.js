@@ -1,19 +1,24 @@
-export default function orderByProps(obj, [...sort]) {
-  const objReplica = {};
-  Object.assign(objReplica, obj);
-  const arrProps = [];
-  for (let i = 0; i < sort.length; i++) {
-    for (const prop in objReplica) {
-      if (sort[i] === prop) {
-        arrProps.push({ key: prop, value: objReplica[prop] });
-        delete objReplica[prop];
+export default function orderByProps(obj, arr) {
+  const newArray = [];
+  const newArray2 = [];
+  if (arr.length === 0) {
+    for (const key in obj) {
+      newArray2.push({ key, value: obj[key] });
+    }
+    newArray2.sort((a, b) => (a.key > b.key ? 1 : -1));
+  } else {
+    for (const i in arr) {
+      const value = arr[i];
+      if (Object.keys(obj).includes(arr[i])) {
+        newArray.push({ key: value, value: obj[value] });
       }
     }
+    for (const key in obj) {
+      if (!arr.includes(key)) {
+        newArray2.push({ key, value: obj[key] });
+      }
+      newArray2.sort((a, b) => (a.key > b.key ? 1 : -1));
+    }
   }
-  const restProps = Object.entries(objReplica);
-  restProps.sort();
-  for (let i = 0; i < restProps.length; i++) {
-    arrProps.push({ key: restProps[i][0], value: restProps[i][1] });
-  }
-  return arrProps;
+  return [...newArray, ...newArray2];
 }
